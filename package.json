@@ -1,0 +1,24 @@
+{
+  "name": "node-cache-clear",
+  "version": "0.0.1",
+  "description": "a tool for clearing dns & sockets pool & htsts cache",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islandZZZ/node-cache-clear.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/islandZZZ/node-cache-clear/issues"
+  },
+  "homepage": "https://github.com/islandZZZ/node-cache-clear#readme",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "commander": "^9.1.0"
+  }
+}
