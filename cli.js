@@ -3,7 +3,9 @@
 const { Command } = require('commander');
 const { runTask } = require('./src/run');
 const { getConfig, setConfig } = require('./src/util');
+require('colors')
 const program = new Command();
+
 program
     .name('iclear')
     .description('a tool for clearing dns & sockets pool & htsts cache')
@@ -20,7 +22,7 @@ program.command('show')
     .description('show your config info')
     .action(async () => {
         const configArr = await getConfig()
-        console.log(configArr.map(v => '- ' + v).join('\n'));
+        console.log(configArr.map(v => '- ' + v).join('\n').green);
     })
 
 program.command('add')

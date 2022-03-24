@@ -4,6 +4,7 @@ const path = require('path')
 const { getConfig } = require('./util')
 const filePath = path.join(__dirname,'../clear.scpt')
 const shell = `sudo osascript ${filePath}`
+require('colors')
 
 const runTask = () => {
     return new Promise((resolve, reject) => {
@@ -46,7 +47,7 @@ const runTask = () => {
                     console.log(err);
                     return
                 }
-                console.log('Dynamically generate the script and prepare to clean up the domain name cache');
+                console.log('node-cache-clear: Dynamically generate the script and prepare to clean up the domain name cache.'.green);
                 runShellTask(shell)
                 resolve()
             })
@@ -62,7 +63,7 @@ const runShellTask = (shell) => {
             return
         }
         stdout && console.log(stdout)
-        console.log('Cleanup succeeded!')
+        console.log('node-cache-clear: Cleanup succeeded!'.green)
     })
 }
 
