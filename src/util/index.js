@@ -1,27 +1,11 @@
 const format = number => String(number).length < 2 ? `0${number}` : number
 const path = require('path')
 const fs = require('fs')
-
+const homeDir =  require('os').homedir //系统的home目录 home dir
+const home = process.env.HOME || homedir // 系统配置的home环境变量 home variable
 
 const defaultFilePath = path.resolve(process.cwd(), './clear.script')
-const defaultConfigPath = path.resolve(process.cwd(), './config.json')
-
-const getTime = () => {
-    const f = format
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const hour = now.getHours();
-    const day = now.getDate();
-    const minute = now.getMinutes();
-    const second = now.getSeconds();
-    return `${year}-${f(month)}-${f(day)} ${f(hour)}:${f(minute)}:${f(second)}`
-}
-
-const logger = (data) => {
-    const { src, dst } = data[0]
-    console.log(`[DONE] ${getTime()}\n查询: ${src}\n返回: ${dst}  `.green); // outputs green text
-}
+const defaultConfigPath = path.join(home, 'node-cache-clear.config.json')
 
 const readFile = (path = defaultFilePath) => {
     return new Promise((resolve, reject) => {
@@ -48,7 +32,6 @@ const writeFile = (fileStr, path = defaultFilePath) => {
 const getConfig = (path = defaultConfigPath) => {
     return new Promise(async (resolve, reject) => {
         const fileStr = await readFile(path)
-        console.log(fileStr);
         let config = null
         try {
             config = JSON.parse(fileStr)
@@ -64,6 +47,7 @@ const setConfig = (arr, path = defaultConfigPath) => {
     return new Promise((resolve, reject) => {
         fs.writeFile(path, data, (err) => {
             if (err) {
+                console.log(err);
                 reject(err)
                 return
             }
@@ -73,8 +57,6 @@ const setConfig = (arr, path = defaultConfigPath) => {
 }
 
 module.exports = {
-    getTime,
-    logger,
     readFile,
     writeFile,
     getConfig,
