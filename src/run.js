@@ -2,7 +2,7 @@ const { exec } = require('child_process')
 const { readFile, writeFile } = require('fs')
 const path = require('path')
 const { getConfig } = require('./util')
-const filePath = path.join(process.cwd(),'clear.scpt')
+const filePath = path.join(__dirname,'clear.scpt')
 
 const shell = `sudo osascript ${filePath}`
 
