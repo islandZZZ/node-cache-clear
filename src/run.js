@@ -25,12 +25,13 @@ const runTask = () => {
 
             const insertScript = `
             execute newTab javascript "
-			const el = document.getElementById('domain-security-policy-view-delete-input');
-            el.addEventListener('click',(e)=>{console.log(e.target.value)});
+			const inputEl = document.getElementById('domain-security-policy-view-delete-input');
+			const buttonEl = document.getElementById('domain-security-policy-view-delete-submit');
+            buttonEl.addEventListener('click',(e)=>{console.log(e.target.value)});
 			[${arrStr}].forEach((v,i)=>{
                 setTimeout(()=>{ 
-                    el.value= v
-                    el.click()
+                    inputEl.value= v
+                    buttonEl.click()
                 },300*i)
             })"`
             let replaceStr = ''
