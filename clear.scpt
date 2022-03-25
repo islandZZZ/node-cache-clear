@@ -30,19 +30,19 @@ on run argv
 			
 			-- dynamic_insert_js_script_start
 			
-            execute newTab javascript "['a.com'].forEach((v,i)=>{
-                const el = document.getElementById('domain-security-policy-view-delete-input')
-                el.addEventListener('clcik,'(e)=>{console.log(e);})
+            execute newTab javascript "
+			const el = document.getElementById('domain-security-policy-view-delete-input');
+            el.addEventListener('click',(e)=>{console.log(e.target.value)});
+			['b.com','a.com'].forEach((v,i)=>{
                 setTimeout(()=>{ 
-                    el.value= v;
+                    el.value= v
                     el.click()
                 },300*i)
             })"
-            
 			-- dynamic_insert_js_script_end
 			
 			-- dynamic_insert_js_delay_start
-			delay 0.3
+			delay 0.8999999999999999
 			-- dynamic_insert_js_delay_end
 			
 			set clickHTSTSDone to not loading of newTab

@@ -24,15 +24,15 @@ const runTask = () => {
             }, '')
 
             const insertScript = `
-            execute newTab javascript "[${arrStr}].forEach((v,i)=>{
-                const el = document.getElementById('domain-security-policy-view-delete-input')
-                el.addEventListener('clcik,'(e)=>{console.log(e);})
+            execute newTab javascript "
+			const el = document.getElementById('domain-security-policy-view-delete-input');
+            el.addEventListener('click',(e)=>{console.log(e.target.value)});
+			[${arrStr}].forEach((v,i)=>{
                 setTimeout(()=>{ 
-                    el.value= v;
+                    el.value= v
                     el.click()
                 },300*i)
-            })"
-            `
+            })"`
             let replaceStr = ''
             replaceStr = fileStr.substring(0, start + startStr.length) + '\n\t\t\t' + insertScript + '\n\t\t\t' + fileStr.substring(end)
 
@@ -40,7 +40,7 @@ const runTask = () => {
             const delayEndStr = '-- dynamic_insert_js_delay_end'
             const delayStart = replaceStr.indexOf(delayStartStr)
             const delayEnd = replaceStr.indexOf(delayEndStr)
-            const delayText = `delay ${((arr.length - 1) * 0.3) + 0.3}`
+            const delayText = `delay ${((arr.length) * 0.3) + 0.3}`
             replaceStr = replaceStr.substring(0, delayStart + delayStartStr.length) + '\n\t\t\t' + delayText + '\n\t\t\t' + replaceStr.substring(delayEnd)
             writeFile(filePath, replaceStr, (err) => {
                 if (err) {
