@@ -1,1 +1,4 @@
-module.exports = require("./src/run")
+const { runTask } = require('./src/run')
+module.exports = {
+    runTask
+}
