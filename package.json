@@ -1,6 +1,6 @@
 {
   "name": "node-cache-clear",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "a tool for clearing dns & sockets pool & htsts cache",
   "main": "cli.js",
   "bin": {
