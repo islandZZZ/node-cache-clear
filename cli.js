@@ -2,8 +2,9 @@
 
 const { Command } = require('commander');
 const { runTask } = require('./src/run');
-const { getConfig, setConfig } = require('./src/util');
-require('colors')
+const { getConfig, setConfig, isMacOS } = require('./src/util');
+const colors = require('colors')
+
 const program = new Command();
 
 program
@@ -12,7 +13,12 @@ program
     .action(async () => {
         const configArr = await getConfig()
         if (!configArr.length) {
-            console.log('tips: empty config. please add domain to config at first.'.red)
+            console.log(colors.red('tips: empty config. please add domain to config at first.'));
+            return
+        }
+
+        if (!isMacOS()) {
+            console.log(colors.red('error: only macOS system is supported.'));
             return
         }
         runTask()
@@ -22,7 +28,7 @@ program.command('show')
     .description('show your config info')
     .action(async () => {
         const configArr = await getConfig()
-        console.log(configArr.map(v => '- ' + v).join('\n').green);
+        console.log(colors.green(configArr.map(v => '- ' + v).join('\n')));
     })
 
 program.command('add')
@@ -38,8 +44,8 @@ program.command('remove')
     .arguments('[string]', 'domain to input')
     .action(async (domain) => {
         const domainArr = await getConfig()
-        const filterList = domainArr.filter(v=>v !== domain)
-        await setConfig(filterList) 
+        const filterList = domainArr.filter(v => v !== domain)
+        await setConfig(filterList)
     })
 
 program.command('clear')

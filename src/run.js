@@ -1,71 +1,27 @@
-const { exec } = require('child_process')
-const { readFile, writeFile } = require('fs')
+const { execSync } = require('child_process')
 const path = require('path')
+const colors = require('colors')
 const { getConfig } = require('./util')
-const filePath = path.join(__dirname,'../clear.scpt')
-const shell = `sudo osascript ${filePath}`
-require('colors')
+const fsExtra = require('fs-extra')
+const { chmodSync } = require('fs')
+const scriptPath = path.join(__dirname, './applescript/clear.scpt')
+const defaultChromeCacheDir = `${process.env.HOME}/Library/Caches/Google/Chrome/Default/Cache`
 
-const runTask = () => {
-    return new Promise((resolve, reject) => {
-        readFile(filePath, async (err, data) => {
-            if (err) {
-                console.log(err);
-                return
-            }
-            const fileStr = data.toString()
-            const startStr = '-- dynamic_insert_js_script_start'
-            const endStr = '-- dynamic_insert_js_script_end'
-            const start = fileStr.indexOf(startStr)
-            const end = fileStr.indexOf(endStr)
-            const arr = await getConfig()
-            const arrStr = arr.reduce((total, cur, index) => {
-                return total + `'${cur}'` + (index < arr.length - 1 ? ',' : '')
-            }, '')
-
-            const insertScript = `
-            execute newTab javascript "
-			const inputEl = document.getElementById('domain-security-policy-view-delete-input');
-			const buttonEl = document.getElementById('domain-security-policy-view-delete-submit');
-            buttonEl.addEventListener('click',(e)=>{console.log(e.target.value)});
-			[${arrStr}].forEach((v,i)=>{
-                setTimeout(()=>{ 
-                    inputEl.value= v
-                    buttonEl.click()
-                },300*i)
-            })"`
-            let replaceStr = ''
-            replaceStr = fileStr.substring(0, start + startStr.length) + '\n\t\t\t' + insertScript + '\n\t\t\t' + fileStr.substring(end)
-
-            const delayStartStr = '-- dynamic_insert_js_delay_start'
-            const delayEndStr = '-- dynamic_insert_js_delay_end'
-            const delayStart = replaceStr.indexOf(delayStartStr)
-            const delayEnd = replaceStr.indexOf(delayEndStr)
-            const delayText = `delay ${((arr.length) * 0.3) + 0.3}`
-            replaceStr = replaceStr.substring(0, delayStart + delayStartStr.length) + '\n\t\t\t' + delayText + '\n\t\t\t' + replaceStr.substring(delayEnd)
-            writeFile(filePath, replaceStr, (err) => {
-                if (err) {
-                    console.log(err);
-                    return
-                }
-                console.log('node-cache-clear: Dynamically generate the script and prepare to clean up the domain name cache.'.green);
-                runShellTask(shell)
-                resolve()
-            })
-
-        })
-    })
-}
-
-const runShellTask = (shell) => {
-    exec(shell, (err, stdout, stderr) => {
-        if (err) {
-            console.log(err)
-            return
-        }
-        stdout && console.log(stdout)
-        console.log('node-cache-clear: Cleanup succeeded!'.green)
-    })
+const runTask = async (_domains) => {
+    const domains = _domains || await getConfig()
+    chmodSync(scriptPath, 755)
+    const shell = `sudo osascript ${scriptPath} ${domains.join(',')}`
+    try {
+        // 1. clear chrome app cache
+        fsExtra.removeSync(defaultChromeCacheDir)
+        // 2. run shell 
+        execSync(shell)
+        console.log(colors.green('node-cache-clear: cleanup succeeded!'))
+        return Promise.resolve()
+    } catch (error) {
+        console.error(colors.red(error))
+        return Promise.reject(error)
+    }
 }
 
 module.exports = {
