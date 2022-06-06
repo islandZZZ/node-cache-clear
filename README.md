@@ -1,14 +1,31 @@
 # node-cache-clear
 a tool for clearing dns & sockets pool & htsts cache.
 
-# Usage
+## Install 
 
 ~~~
 npm i node-cache-clear -g
+~~~
 
-iclear add a.com b.com c.com
+## Usage 
+
+**Add domains**
+~~~
+iclear add test.com test.com
+~~~
+
+**Remove domain**
+~~~
 iclear remove a.com 
+iclear clear // remove all domains
+~~~
+
+**Show domain configs**
+~~~
 iclear show
-iclear clear // clear domain list
+~~~
+
+**Run**
+~~~
 iclear // run the cache clear script
 ~~~
